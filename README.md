@@ -1,6 +1,6 @@
 # rabbitmq-blog-demo
 
-RabbitMQ 练习项目，对应博客《[RabbitMQ 安装与核心概念——Queue、Exchange、Channel](https://langkemaoxin.github.io/中间件/rabbitmq/rabbitmq-02-install-concepts)》的 **5.1（Maven 依赖）** 与 **5.2（消费者示例）**。
+RabbitMQ 练习项目，对应博客《[RabbitMQ 安装与核心概念——Queue、Exchange、Channel](https://code-corey.github.io/中间件/rabbitmq/rabbitmq-02-install-concepts)》的 **5.1（Maven 依赖）** 与 **5.2（消费者示例）**。
 
 用原生 `com.rabbitmq:amqp-client` 客户端（与博客一致），套一层 Spring Boot 外壳，方便配置与打包。
 

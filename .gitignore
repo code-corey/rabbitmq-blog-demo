@@ -1,0 +1,22 @@
+# Build
+target/
+build/
+*.class
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.project
+.classpath
+.settings/
+nbproject/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Spring Boot
+HELP.md

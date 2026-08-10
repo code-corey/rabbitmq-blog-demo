@@ -1,0 +1,20 @@
+# ===== RabbitMQ 连接配置 =====
+# 默认值对应博客 1.1 节的 Docker 镜像（rabbitmq:3.13-management，本机）
+# 博客 5.2 示例原文用的是 192.168.65.112 + vhost=/mirror，按需修改
+rabbitmq:
+  practice:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+    queue: test2
+
+# 运行模式：consumer（默认，启动消费者并阻塞）/ send（发一条消息后退出）
+app:
+  mode: consumer
+
+spring:
+  main:
+    # 非 Web 应用；消费者进程靠 keep-alive 保活，持续消费
+    keep-alive: true

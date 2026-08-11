@@ -14,41 +14,17 @@
     <groupId>io.github.codecorey</groupId>
     <artifactId>rabbitmq-learning</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>rabbitmq-learning</name>
-    <description>RabbitMQ 练习项目（对应博客《RabbitMQ 安装与核心概念》5.1 / 5.2）</description>
+    <description>RabbitMQ 练习项目（多模块），对应博客 RabbitMQ 系列各篇</description>
 
     <properties>
         <java.version>17</java.version>
-        <!-- 对应博客 5.1：原生 RabbitMQ Java 客户端版本 -->
         <amqp-client.version>5.21.0</amqp-client.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- 博客 5.1：原生 amqp-client（ConnectionFactory / Channel） -->
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>${amqp-client.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <modules>
+        <module>ch02-install-concepts</module>
+        <module>ch05-springboot</module>
+    </modules>
 </project>

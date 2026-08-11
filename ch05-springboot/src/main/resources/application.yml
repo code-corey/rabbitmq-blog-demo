@@ -1,0 +1,20 @@
+# ===== Spring AMQP 配置（对应博客《SpringBoot 集成 RabbitMQ》第二节） =====
+# 默认值对应博客 1.1 节的 Docker 镜像（本机）；博客原文用 192.168.65.112 + vhost=/mirror
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+    # 生产者确认（correlated = 异步回调，见 DemoProducer）
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true          # 不可路由时触发 return 回调
+    listener:
+      simple:
+        acknowledge-mode: manual   # 手动 Ack（配合 DemoConsumer 的 channel.basicAck）
+        prefetch: 1                # 对应原生 basicQos(1)
+  main:
+    keep-alive: true           # 非 Web 应用保活，便于观察消费

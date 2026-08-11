@@ -1,14 +1,19 @@
 # rabbitmq-blog-demo
 
-RabbitMQ 练习项目，对应博客《[RabbitMQ 安装与核心概念——Queue、Exchange、Channel](https://code-corey.github.io/中间件/rabbitmq/rabbitmq-02-install-concepts)》的 **5.1（Maven 依赖）** 与 **5.2（消费者示例）**。
+RabbitMQ 练习项目（多模块），对应博客 [RabbitMQ 系列](https://code-corey.github.io/中间件/rabbitmq/rabbitmq-02-install-concepts)。每个模块对应一篇博客，原生 API 与 Spring AMQP 对照实现。
 
-用原生 `com.rabbitmq:amqp-client` 客户端（与博客一致），套一层 Spring Boot 外壳，方便配置与打包。
+## 模块
+
+| 模块 | 对应博客 | 要点 |
+|------|---------|------|
+| [`ch02-install-concepts`](./ch02-install-concepts) | [02 安装与核心概念](https://code-corey.github.io/中间件/rabbitmq/rabbitmq-02-install-concepts) | 原生 `amqp-client`：5.1 依赖 + 5.2 FirstConsumer |
+| [`ch05-springboot`](./ch05-springboot) | [05 SpringBoot 集成](https://code-corey.github.io/中间件/rabbitmq/rabbitmq-05-springboot) | Spring AMQP：`RabbitTemplate` + `@RabbitListener` + Publisher Confirms |
 
 ## 环境
 
 - JDK 17
 - Maven 3.6+
-- 一个可连接的 RabbitMQ（推荐按博客 1.1 节用 Docker 拉起）：
+- 一个可连接的 RabbitMQ（按博客 1.1 节用 Docker 拉起）：
 
   ```bash
   docker run -d --name rabbitmq \
@@ -17,75 +22,57 @@ RabbitMQ 练习项目，对应博客《[RabbitMQ 安装与核心概念——Queu
     rabbitmq:3.13-management
   ```
 
-## 配置
-
-`src/main/resources/application.yml`：
-
-```yaml
-rabbitmq:
-  practice:
-    host: localhost      # 博客 5.2 原文用 192.168.65.112
-    port: 5672
-    username: admin
-    password: admin
-    virtual-host: /      # 博客 5.2 原文用 /mirror
-    queue: test2
-```
-
-按需改成你自己的 Broker 地址、账号、vhost 与队列名。
-
-## 运行
-
-### 1. 启动消费者（对应博客 5.2 FirstConsumer）
+## 构建
 
 ```bash
-mvn spring-boot:run
+mvn -DskipTests package     # 构建所有模块
 ```
 
-看到 `[*] 等待消息于队列 test2` 即开始监听；进程会阻塞等待消息，`Ctrl+C` 退出。
+---
 
-### 2. 另开一个终端，发送一条消息
+## ch02-install-concepts（原生 amqp-client）
+
+连接配置：`ch02-install-concepts/src/main/resources/application.yml`（默认 localhost / admin / vhost=`/`；博客原文 192.168.65.112 / `/mirror`）。
 
 ```bash
-mvn spring-boot:run -Dspring-boot.run.arguments=--app.mode=send
+# 消费者（博客 5.2 FirstConsumer）
+mvn -pl ch02-install-concepts -am spring-boot:run -Dspring-boot.run.arguments=--app.mode=consumer
+
+# 另开终端发一条
+mvn -pl ch02-install-concepts -am spring-boot:run -Dspring-boot.run.arguments=--app.mode=send
 ```
 
-或先打包再运行：
+代码对照：
+
+| 博客小节 | 代码 |
+|----------|------|
+| 5.1 Maven 依赖 | `pom.xml` 的 `com.rabbitmq:amqp-client:5.21.0` |
+| 5.2 FirstConsumer | `consumer/FirstConsumer.java` |
+| 3.1 发持久消息 | `producer/FirstProducer.java`（`PERSISTENT_TEXT_PLAIN`） |
+
+---
+
+## ch05-springboot（Spring AMQP）
+
+连接配置：`ch05-springboot/src/main/resources/application.yml`（含 `publisher-confirm-type` / `publisher-returns` / manual ack）。
 
 ```bash
-mvn -q -DskipTests package
-java -jar target/rabbitmq-learning-0.0.1-SNAPSHOT.jar --app.mode=send
+mvn -pl ch05-springboot -am spring-boot:run
 ```
 
-### 3. 观察输出
+启动后自动：声明 `demo.exchange` / `demo.queue` / 绑定 → `DemoRunner` 发送 3 条消息 → `@RabbitListener` 消费并手动 ACK。日志可见 Publisher Confirm（ACK）与消费输出。
 
-生产者侧：
+代码对照：
 
-```
-[x] 已发送: hello rabbitmq @ 14:30:01.234
-```
-
-消费者侧：
-
-```
-routingKey > test2
-deliveryTag > 1
-content: hello rabbitmq @ 14:30:01.234
-```
-
-也可以打开管理控制台 [http://localhost:15672](http://localhost:15672)（admin/admin），在 Queues 看 `test2` 的 Ready / Total 变化，在 Connections / Channels 看连接与信道。
-
-## 代码与博客对照
-
-| 博客小节 | 本项目 |
-|----------|--------|
-| 5.1 Maven 依赖 | `pom.xml` 中的 `com.rabbitmq:amqp-client:5.21.0` |
-| 5.2 FirstConsumer | `consumer/FirstConsumer.java`（连接参数改为从 `application.yml` 注入，消费逻辑一致） |
-| 3.1 发持久消息 | `producer/FirstProducer.java` 用 `MessageProperties.PERSISTENT_TEXT_PLAIN` |
-| `queueDeclare` 五参数 | 两处 `queueDeclare(queue, true, false, false, null)`，详解见博客 5.2 |
+| 博客小节 | 代码 |
+|----------|------|
+| 二、配置关键参数 | `application.yml`（`spring.rabbitmq.*`） |
+| 三、声明 Exchange/Queue/Binding | `config/RabbitConfig.java` |
+| 四、RabbitTemplate + Confirms | `producer/DemoProducer.java` |
+| 五、@RabbitListener 消费 | `consumer/DemoConsumer.java` |
 
 ## 说明
 
-- 消费者进程由 `spring.main.keep-alive=true` 保活；发送端发完即 `ctx.close()` 退出。
-- 手动 ACK：消费者在 `handleDelivery` 里 `basicAck`，`basicQos(1)` 保证一次只投递一条。
-- `FirstProducer` 用默认交换机 `""` + routingKey=队列名直接投递，方便在还没讲 Exchange 的阶段先跑通。
+- 两个模块都靠 `keep-alive`（ch05）或连接线程（ch02）保活，`Ctrl+C` 退出。
+- ch05 的 `acknowledge-mode: manual` + `prefetch: 1`，对应原生的手动 ACK 与 `basicQos(1)`。
+- ch05 的 `DemoRunner` 用 `ApplicationReadyEvent` 触发发送，确保监听容器已就绪再发。

@@ -1,0 +1,19 @@
+# ===== AMQP 与多协议演示配置（第 13 篇）=====
+# 本 module 用原生 amqp-client 跑一个 AMQP 0-9-1 基线 demo（连本机 Broker 收发一条）。
+# MQTT / STOMP / Stream 协议的端口、配置与命令行测试见 README。
+rabbitmq:
+  # 默认对应博客 1.1 的 Docker 镜像（rabbitmq:3.13-management，本机）
+  host: localhost
+  port: 5672          # AMQP 0-9-1 与 1.0 共用端口，靠连接初始的协议头协商
+  username: admin
+  password: admin
+  virtual-host: /
+
+spring:
+  main:
+    # 非 Web 应用：keep-alive 保活；demo 跑完一个来回后由 runner 关闭上下文退出
+    keep-alive: true
+
+logging:
+  level:
+    io.github.codecorey.protocols: INFO

@@ -1,0 +1,25 @@
+# ===== RabbitMQ 安全 demo 配置（第 15 篇）=====
+# 对应博客《RabbitMQ 安全——认证、授权与 TLS》
+app:
+  # --- RabbitMQ 连接（默认对应博客 Docker 镜像 rabbitmq:3.13-management，本机）---
+  host: localhost
+  port: 5672              # 普通 AMQP；启用 TLS 时若不改这里，自动用 amqps 默认端口 5671
+  username: admin
+  password: admin
+  virtual-host: /
+  queue: security.tls     # 演示用队列（durable）
+
+  # --- TLS / amqps 开关 ---
+  tls:
+    enabled: false                  # true 时改走 amqps；需 Broker 开启 TLS 监听（见 README）
+    # truststore: /path/to/client.truststore.p12   # 可选：自定义信任库（校验服务端证书）
+    # truststore-password: changeit                 # 信任库密码
+
+spring:
+  main:
+    # 非 Web 应用：keep-alive 保活（demo 跑完不立即退出，便于看日志）
+    keep-alive: true
+
+logging:
+  level:
+    io.github.codecorey.security: INFO

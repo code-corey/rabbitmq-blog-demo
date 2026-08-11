@@ -1,0 +1,22 @@
+# ===== RabbitMQ 连接配置 =====
+# 默认连接本机默认 vhost /（RabbitMQ 启动自带，开箱即用）。
+#
+# 想切换到自定义 vhost（如 /mirror），只需把下面的 virtual-host 改掉，代码一行不动——
+# 但该 vhost 必须先在 Broker 建好并给 admin 授权，否则连接会被拒（ACCESS_REFUSED）：
+#   rabbitmqctl add_vhost /mirror
+#   rabbitmqctl set_permissions -p /mirror admin ".*" ".*" ".*"
+# （可选）再上个配额护栏：
+#   rabbitmqctl set_vhost_limits -p /mirror '{"max-connections": 256, "max-queues": 1024}'
+rabbitmq:
+  vhost:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+    queue: vhost.demo.queue
+
+spring:
+  main:
+    # 非 Web 应用；消费者进程靠 keep-alive 保活，持续消费
+    keep-alive: true

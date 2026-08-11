@@ -27,13 +27,18 @@
         <module>ch01-what-is-mq</module>
         <module>ch02-install-concepts</module>
         <module>ch03-programming-model</module>
-        <module>ch04-messaging-patterns</module>
-        <module>ch05-springboot</module>
-        <module>ch06-queue-types</module>
-        <module>ch07-dlx-delay</module>
-        <module>ch08-sharding</module>
-        <module>ch09-monitor-backup-federation</module>
-        <module>ch10-cluster-ha</module>
-        <module>ch11-classic-backlog-degradation</module>
+        <module>ch04-queue-concepts</module>
+        <module>ch05-messaging-patterns</module>
+        <module>ch06-springboot</module>
+        <module>ch07-queue-types</module>
+        <module>ch08-dlx-delay</module>
+        <module>ch09-sharding</module>
+        <module>ch10-monitor-backup-federation</module>
+        <module>ch11-cluster-ha</module>
+        <module>ch12-classic-backlog-degradation</module>
+        <module>ch13-amqp-and-protocols</module>
+        <module>ch15-security</module>
+        <module>ch16-virtual-hosts</module>
+        <module>ch17-rpc</module>
     </modules>
 </project>

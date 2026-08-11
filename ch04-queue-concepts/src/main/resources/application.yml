@@ -1,0 +1,15 @@
+# ===== RabbitMQ 连接配置（原生 amqp-client） =====
+# 默认值对应博客 1.1 节的 Docker 镜像（rabbitmq:3.13-management，本机）
+# 博客原文常用 192.168.65.112 + vhost=/mirror，按需修改
+rabbitmq:
+  practice:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+
+spring:
+  main:
+    # 非 Web 应用：四个概念演示跑完后靠 keep-alive 保活，便于观察，Ctrl+C 退出
+    keep-alive: true

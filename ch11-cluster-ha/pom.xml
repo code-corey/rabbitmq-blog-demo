@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.codecorey</groupId>
+        <artifactId>rabbitmq-learning</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>ch11-cluster-ha</artifactId>
+    <name>ch11-cluster-ha</name>
+    <description>博客《RabbitMQ 集群与高可用》——纯运维文档 module，无 Java 代码</description>
+
+    <!--
+        本篇博客全程为 rabbitmqctl 命令与配置，无 Java 代码。
+        本 module 仅用于在 reactor 中占一个文档位：
+          - 不加任何依赖
+          - 不加 spring-boot-maven-plugin（无主类，repackage 会失败）
+          - packaging 默认 jar，不显式声明 groupId/version（继承父 pom）
+    -->
+</project>

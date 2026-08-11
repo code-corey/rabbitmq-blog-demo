@@ -1,7 +1,7 @@
 # ch10-cluster-ha · RabbitMQ 集群与高可用
 
 > **说明**：本篇无 Java 代码，本 module 为 **运维文档** module，不包含 `src` 目录与任何 Java 类。
-> 对应博客：[《RabbitMQ 集群与高可用》](https://langkemaoxin.github.io/中间件/rabbitmq/rabbitmq-10-cluster-ha)。
+> 对应博客：[《RabbitMQ 集群与高可用》](https://code-corey.github.io/中间件/rabbitmq/rabbitmq-11-cluster-ha)。
 >
 > 父项目 `pom.xml` 已将本 module 列入 reactor，仅为在多模块结构中占一个篇章位置；
 > `pom.xml` 未声明任何依赖、未挂 `spring-boot-maven-plugin`（无主类，repackage 会失败）。

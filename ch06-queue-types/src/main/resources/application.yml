@@ -1,0 +1,25 @@
+# ===== RabbitMQ 连接配置（原生 amqp-client，对应博客《Classic、Quorum、Stream——如何选择队列类型》） =====
+# 默认值对应本机 rabbitmq:3.13-management 镜像
+# 博客原文用的是 192.168.65.112 + vhost=/mirror，按需修改下面的参数即可
+rabbitmq:
+  practice:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+    # 三种队列名（Classic 为默认类型，仅作对比基线）
+    classic-queue: classic.queue
+    quorum-queue: quorum.queue
+    stream-queue: stream.queue
+    # Stream 消费起点（博客 4.2 三步之一：消费时指定 x-stream-offset）
+    #   first - 从第一条开始回放，演示 Stream 的 Replay / Time-travel（默认，便于看到全部消息）
+    #   last  - 从最后一条开始（博客示例取值）
+    #   next  - 只消费订阅之后的新消息
+    #   也可填具体数字偏移量
+    stream-offset: first
+
+spring:
+  main:
+    # 非 Web 应用；消费者靠 keep-alive 保活，持续异步消费
+    keep-alive: true

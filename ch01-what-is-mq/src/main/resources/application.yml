@@ -1,0 +1,4 @@
+# ===== 博客《MQ 是什么》示例：纯进程内事件 demo，无需连接 RabbitMQ =====
+spring:
+  main:
+    keep-alive: true           # 非 Web 应用保活，便于观察 ApplicationEvent 输出

@@ -1,0 +1,27 @@
+# ===== RabbitMQ 连接配置（原生 amqp-client，非 spring-boot-starter-amqp） =====
+# 默认值对应博客 1.1 节的 Docker 镜像（rabbitmq:3.13-management，本机）
+# 博客原文未指定连接参数，这里抽成配置方便切换 Broker
+rabbitmq:
+  delay:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+
+    # 延迟队列拓扑（对应博客第五节示例架构）
+    delay-exchange: delay.exchange        # Producer 投递的交换机
+    delay-queue: delay.queue              # 设 TTL + DLX，无 Consumer，消息在此等待过期
+    delay-routing-key: delay.order        # Producer → delay.exchange 使用的 routing key
+    process-exchange: process.exchange    # 死信交换机（DLX），过期消息转发目标
+    process-queue: process.queue          # 死信队列，由 Consumer 消费执行关单
+    process-routing-key: process.order    # delay.queue 的 x-dead-letter-routing-key 指向它
+
+    # 消息 TTL（毫秒）：博客第五节原文为 1800000（30 分钟，订单关单）；
+    # 演示用 5 秒，避免真等 30 分钟
+    message-ttl: 5000
+
+spring:
+  main:
+    # 非 Web 应用；Consumer 靠 keep-alive 保活，TTL 到期后持续消费死信
+    keep-alive: true

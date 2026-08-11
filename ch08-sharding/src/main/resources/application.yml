@@ -1,0 +1,26 @@
+# ===== RabbitMQ 连接配置 =====
+# 博客原文把连接参数硬编码在 ShardingProducer / ShardingConsumer（192.168.65.112 / admin / /mirror），
+# 这里抽成配置，默认指向本机 rabbitmq:3.13-management 镜像，按需修改
+rabbitmq:
+  practice:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+    # x-modulus-hash 交换机名（同时作为消费端的伪队列名）
+    exchange: sharding_exchange
+    # 生产者发送的消息条数（博客为 3000）
+    message-count: 3000
+
+app:
+  # 运行模式：send=生产者（发完退出）/ consumer=消费者（默认，靠 keep-alive 保活）
+  #mode: consumer
+  mode: send
+  # 分片数：对同一伪队列 basicConsume 的次数，应与 Broker 端 sharding 策略的总分片数一致
+  shards: 3
+
+spring:
+  main:
+    # 非 Web 应用；消费者进程靠 keep-alive 保活，持续消费
+    keep-alive: true

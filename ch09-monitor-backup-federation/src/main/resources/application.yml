@@ -1,0 +1,36 @@
+# ===== Federation 联邦配置 =====
+# 两个 Broker：upstream（上游/消息源）+ downstream（下游/消费者本地）
+#
+# 博客拓扑：上游 192.168.65.193，下游 192.168.65.112；联邦由下游主动配 upstream URI
+# 把上游 fed_exchange 的消息单向同步到下游，下游消费者在本地队列收到。
+#
+# 注意：DownStream 与 UpStream 建议使用相同 Virtual Host
+# 默认两组都指向 localhost:5672（admin/admin/vhost=/）；双 broker 实跑时按机房修改
+#   downstream.host / upstream.host（以及各自的 port、账号、virtual-host）
+app:
+  upstream:
+    # 上游 Broker（消息源，博客中为 192.168.65.193）
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+  downstream:
+    # 下游 Broker（消费者本地，博客中为 192.168.65.112）
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+  # 联邦资源名（上下游同名，上游不存在则联邦自动创建）
+  exchange: fed_exchange
+  queue: fed_queue
+  routing-key: routKey
+  # UpStreamProducer 发送条数与就绪等待（毫秒，留给下游消费者与联邦链路就绪）
+  producer-count: 5
+  producer-delay-ms: 2000
+
+spring:
+  main:
+    # 非 Web 应用；下游消费者连接靠 keep-alive 保活，持续消费
+    keep-alive: true

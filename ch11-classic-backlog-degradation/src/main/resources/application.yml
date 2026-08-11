@@ -1,0 +1,26 @@
+# ===== Classic 队列积压压测配置（第 11 篇）=====
+# 本 module 为自研压测演示；博客《Classic 队列为什么一堆积就变慢》原文为纯性能分析、无代码
+app:
+  # --- RabbitMQ 连接（默认对应博客 1.1 的 Docker 镜像 rabbitmq:3.13-management，本机）---
+  host: localhost
+  port: 5672
+  username: admin
+  password: admin
+  virtual-host: /
+
+  # --- 压测参数 ---
+  queue: backlog.classic          # 经典队列（durable=true），积压的主角
+  message-count: 50000            # 灌入消息总数
+  consumer-sleep-ms: 50           # 慢消费者每条睡眠 ms：制造积压（50ms → 约 20 条/s）
+  payload-bytes: 256              # 单条消息负载字节数（≤4096 走 message store 内嵌）
+  monitor-interval-ms: 2000       # 进度 / 队列深度 / 发布速率的打印间隔
+  purge-on-start: true            # 启动时清空队列，保证每次压测可复现
+
+spring:
+  main:
+    # 非 Web 应用：keep-alive 保活，让慢消费者在压测后继续排空队列，便于观察深度下降
+    keep-alive: true
+
+logging:
+  level:
+    io.github.codecorey.backlog: INFO

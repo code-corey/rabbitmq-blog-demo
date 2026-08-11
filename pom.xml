@@ -24,7 +24,16 @@
     </properties>
 
     <modules>
+        <module>ch01-what-is-mq</module>
         <module>ch02-install-concepts</module>
+        <module>ch03-programming-model</module>
+        <module>ch04-messaging-patterns</module>
         <module>ch05-springboot</module>
+        <module>ch06-queue-types</module>
+        <module>ch07-dlx-delay</module>
+        <module>ch08-sharding</module>
+        <module>ch09-monitor-backup-federation</module>
+        <module>ch10-cluster-ha</module>
+        <module>ch11-classic-backlog-degradation</module>
     </modules>
 </project>

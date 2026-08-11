@@ -1,0 +1,26 @@
+# ===== RabbitMQ 连接 + 拓扑配置（对应博客《基础编程模型——从连接到消费》） =====
+# 默认值对应博客 1.1 节的 Docker 镜像（rabbitmq:3.13-management，本机）
+# 博客原文常用 192.168.65.112 + vhost=/mirror，按需修改
+rabbitmq:
+  practice:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+    # 拓扑命名（演示用，可自定义）
+    exchange: exchange.programming.model
+    alternate-exchange: exchange.programming.model.ae
+    queue: queue.programming.model
+    alternate-queue: queue.programming.model.ae
+    routing-key: prog.key
+    unroutable-key: prog.unroutable     # 用于触发 alternate-exchange 兜底
+    # 主队列类型：quorum（博客 Step 3 Quorum 声明）或 classic
+    # 注意：已存在的同名队列改类型需先在控制台删除，否则 PRECONDITION_FAILED
+    queue-type: quorum
+
+spring:
+  main:
+    # 非 Web 应用；keep-alive 保证演示期间（异步推送回调）进程不提前退出
+    # 演示结束后由 ProgrammingModelDemoRunner 显式关闭上下文，进程优雅退出
+    keep-alive: true
